@@ -89,11 +89,13 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
     <rootProps.slots.baseTextField
       fullWidth
       id={id}
-      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+      inputProps={{
+        'aria-label': apiRef.current.getLocaleText('filterPanelInputLabel'),
+      }}
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
       value={filterValueState}
       onChange={onFilterChange}
-      variant="standard"
+      variant="outlined"
       type={type || 'text'}
       InputLabelProps={{
         shrink: true,

@@ -66,7 +66,9 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   return (
     <rootProps.slots.baseTextField
       id={id}
-      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+      inputProps={{
+        'aria-label': apiRef.current.getLocaleText('filterPanelInputLabel'),
+      }}
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
       value={filterValueState}
       onChange={onFilterChange}

@@ -132,6 +132,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: ['filterForm'],
     deleteIcon: ['filterFormDeleteIcon'],
+    logicOperatorContainer: ['filterFormLogicOperatorContainer'],
     logicOperatorInput: ['filterFormLogicOperatorInput'],
     columnInput: ['filterFormColumnInput'],
     operatorInput: ['filterFormOperatorInput'],
@@ -157,8 +158,18 @@ const FilterFormDeleteIcon = styled('div', {
   overridesResolver: (_, styles) => styles.filterFormDeleteIcon,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   flexShrink: 0,
-  margin: theme.spacing(0, -0.25),
+  margin: theme.spacing(0, -0.25, 0, 'auto'),
 }));
+
+const FilterFormLogicOperatorContainer = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'FilterFormLogicOperatorContainer',
+  overridesResolver: (_, styles) => styles.filterFormLogicOperatorContainer,
+})<{ ownerState: OwnerState }>({
+  display: 'flex',
+  alignItems: 'center',
+  width: 75,
+});
 
 const FilterFormLogicOperatorInput = styled('div', {
   name: 'MuiDataGrid',
@@ -178,13 +189,13 @@ const FilterFormOperatorInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormOperatorInput',
   overridesResolver: (_, styles) => styles.filterFormOperatorInput,
-})<{ ownerState: OwnerState }>({ width: 120 });
+})<{ ownerState: OwnerState }>({ width: 150 });
 
 const FilterFormValueInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormValueInput',
   overridesResolver: (_, styles) => styles.filterFormValueInput,
-})<{ ownerState: OwnerState }>({ width: 190 });
+})<{ ownerState: OwnerState }>({ width: 200 });
 
 const getLogicOperatorLocaleKey = (logicOperator: GridLogicOperator) => {
   switch (logicOperator) {
@@ -228,10 +239,17 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     const columnLookup = useGridSelector(apiRef, gridColumnLookupSelector);
     const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
+
     const columnSelectId = useId();
     const columnSelectLabelId = useId();
+    const columnSelectLabel = apiRef.current.getLocaleText('filterPanelColumns');
+    const showColumnSelectLabel = typeof columnSelectLabel !== 'string';
+
     const operatorSelectId = useId();
     const operatorSelectLabelId = useId();
+    const operatorSelectLabel = apiRef.current.getLocaleText('filterPanelOperator');
+    const showOperatorSelectLabel = typeof operatorSelectLabel !== 'string';
+
     const rootProps = useGridRootProps();
     const classes = useUtilityClasses(rootProps);
     const valueRef = React.useRef<any>(null);
@@ -422,65 +440,52 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
         ownerState={rootProps}
         {...other}
       >
-        <div style={{ display: 'flex', alignItems: 'center', width: 75 }}>
-          {!showMultiFilterOperators && (
+        <FilterFormLogicOperatorContainer
+          ownerState={rootProps}
+          className={classes.logicOperatorContainer}
+        >
+          {hasLogicOperatorColumn && showMultiFilterOperators ? (
+            <FilterFormLogicOperatorInput
+              as={rootProps.slots.baseFormControl}
+              {...baseFormControlProps}
+              {...logicOperatorInputProps}
+              sx={[baseFormControlProps.sx, logicOperatorInputProps.sx]}
+              className={clsx(
+                classes.logicOperatorInput,
+                baseFormControlProps.className,
+                logicOperatorInputProps.className,
+              )}
+              ownerState={rootProps}
+            >
+              <rootProps.slots.baseSelect
+                size="small"
+                inputProps={{
+                  'aria-label': apiRef.current.getLocaleText('filterPanelLogicOperator'),
+                }}
+                value={multiFilterOperator ?? ''}
+                onChange={changeLogicOperator}
+                disabled={!!disableMultiFilterOperator || logicOperators.length === 1}
+                native={isBaseSelectNative}
+                {...rootProps.slotProps?.baseSelect}
+              >
+                {logicOperators.map((logicOperator) => (
+                  <rootProps.slots.baseSelectOption
+                    {...baseSelectOptionProps}
+                    native={isBaseSelectNative}
+                    key={logicOperator.toString()}
+                    value={logicOperator.toString()}
+                  >
+                    {apiRef.current.getLocaleText(getLogicOperatorLocaleKey(logicOperator))}
+                  </rootProps.slots.baseSelectOption>
+                ))}
+              </rootProps.slots.baseSelect>
+            </FilterFormLogicOperatorInput>
+          ) : (
             <Typography variant="body1" sx={{ ml: 1.5 }}>
-              Where
+              {apiRef.current.getLocaleText('filterPanelWhere')}
             </Typography>
           )}
-          <FilterFormLogicOperatorInput
-            as={rootProps.slots.baseFormControl}
-            {...baseFormControlProps}
-            {...logicOperatorInputProps}
-            sx={[
-              hasLogicOperatorColumn
-                ? {
-                    display: 'flex',
-                  }
-                : {
-                    display: 'none',
-                  },
-              showMultiFilterOperators
-                ? {
-                    display: 'flex',
-                  }
-                : {
-                    display: 'none',
-                  },
-              baseFormControlProps.sx,
-              logicOperatorInputProps.sx,
-            ]}
-            className={clsx(
-              classes.logicOperatorInput,
-              baseFormControlProps.className,
-              logicOperatorInputProps.className,
-            )}
-            ownerState={rootProps}
-          >
-            <rootProps.slots.baseSelect
-              size="small"
-              inputProps={{
-                'aria-label': apiRef.current.getLocaleText('filterPanelLogicOperator'),
-              }}
-              value={multiFilterOperator ?? ''}
-              onChange={changeLogicOperator}
-              disabled={!!disableMultiFilterOperator || logicOperators.length === 1}
-              native={isBaseSelectNative}
-              {...rootProps.slotProps?.baseSelect}
-            >
-              {logicOperators.map((logicOperator) => (
-                <rootProps.slots.baseSelectOption
-                  {...baseSelectOptionProps}
-                  native={isBaseSelectNative}
-                  key={logicOperator.toString()}
-                  value={logicOperator.toString()}
-                >
-                  {apiRef.current.getLocaleText(getLogicOperatorLocaleKey(logicOperator))}
-                </rootProps.slots.baseSelectOption>
-              ))}
-            </rootProps.slots.baseSelect>
-          </FilterFormLogicOperatorInput>
-        </div>
+        </FilterFormLogicOperatorContainer>
         <FilterFormColumnInput
           as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
@@ -492,18 +497,25 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           )}
           ownerState={rootProps}
         >
-          <rootProps.slots.baseInputLabel
-            {...baseInputLabelProps}
-            htmlFor={columnSelectId}
-            id={columnSelectLabelId}
-          >
-            {apiRef.current.getLocaleText('filterPanelColumns')}
-          </rootProps.slots.baseInputLabel>
+          {showColumnSelectLabel && (
+            <rootProps.slots.baseInputLabel
+              {...baseInputLabelProps}
+              htmlFor={columnSelectId}
+              id={columnSelectLabelId}
+            >
+              {columnSelectLabel}
+            </rootProps.slots.baseInputLabel>
+          )}
           <rootProps.slots.baseSelect
             size="small"
             id={columnSelectId}
-            label={apiRef.current.getLocaleText('filterPanelColumns')}
-            labelId={columnSelectLabelId}
+            label={showColumnSelectLabel ? columnSelectLabel : undefined}
+            labelId={showColumnSelectLabel ? columnSelectLabelId : undefined}
+            inputProps={{
+              'aria-label': !showColumnSelectLabel
+                ? (apiRef.current.getLocaleText('filterPanelColumns') as string)
+                : undefined,
+            }}
             value={selectedField ?? ''}
             onChange={changeColumn}
             native={isBaseSelectNative}
@@ -533,17 +545,24 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           )}
           ownerState={rootProps}
         >
-          <rootProps.slots.baseInputLabel
-            {...baseInputLabelProps}
-            htmlFor={operatorSelectId}
-            id={operatorSelectLabelId}
-          >
-            {apiRef.current.getLocaleText('filterPanelOperator')}
-          </rootProps.slots.baseInputLabel>
+          {showOperatorSelectLabel && (
+            <rootProps.slots.baseInputLabel
+              {...baseInputLabelProps}
+              htmlFor={operatorSelectId}
+              id={operatorSelectLabelId}
+            >
+              {operatorSelectLabel}
+            </rootProps.slots.baseInputLabel>
+          )}
           <rootProps.slots.baseSelect
             size="small"
-            labelId={operatorSelectLabelId}
-            label={apiRef.current.getLocaleText('filterPanelOperator')}
+            labelId={showOperatorSelectLabel ? operatorSelectLabelId : undefined}
+            label={showOperatorSelectLabel ? operatorSelectLabel : undefined}
+            inputProps={{
+              'aria-label': !showOperatorSelectLabel
+                ? (apiRef.current.getLocaleText('filterPanelOperator') as string)
+                : undefined,
+            }}
             id={operatorSelectId}
             value={item.operator}
             onChange={changeOperator}
@@ -567,20 +586,19 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             ))}
           </rootProps.slots.baseSelect>
         </FilterFormOperatorInput>
-        <FilterFormValueInput
-          as={rootProps.slots.baseFormControl}
-          {...baseFormControlProps}
-          {...valueInputPropsOther}
-          className={clsx(
-            classes.valueInput,
-            baseFormControlProps.className,
-            valueInputPropsOther.className,
-          )}
-          ownerState={rootProps}
-        >
-          {currentOperator?.InputComponent ? (
+        {currentOperator?.InputComponent ? (
+          <FilterFormValueInput
+            as={rootProps.slots.baseFormControl}
+            {...baseFormControlProps}
+            {...valueInputPropsOther}
+            className={clsx(
+              classes.valueInput,
+              baseFormControlProps.className,
+              valueInputPropsOther.className,
+            )}
+            ownerState={rootProps}
+          >
             <currentOperator.InputComponent
-              variant="outlined"
               size="small"
               apiRef={apiRef}
               item={item}
@@ -591,8 +609,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
               {...currentOperator.InputComponentProps}
               {...InputComponentProps}
             />
-          ) : null}
-        </FilterFormValueInput>
+          </FilterFormValueInput>
+        ) : null}
         <FilterFormDeleteIcon
           as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}

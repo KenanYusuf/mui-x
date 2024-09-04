@@ -26,8 +26,8 @@ const GridPanelContentRoot = styled('div', {
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing(2.5),
-  padding: theme.spacing(2, 1.5),
+  gap: theme.spacing(2),
+  padding: theme.spacing(2),
   overflow: 'auto',
   flex: '1 1',
   maxHeight: 400,

@@ -43,6 +43,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   columnsManagementReset: 'Reset',
 
   // Filter panel text
+  filterPanelWhere: 'Where',
   filterPanelAddFilter: 'Add filter',
   filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Remove',
@@ -52,7 +53,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   filterPanelOperatorOr: 'Or',
   filterPanelColumns: 'Column',
   filterPanelInputLabel: 'Value',
-  filterPanelInputPlaceholder: 'Filter value',
+  filterPanelInputPlaceholder: 'Value',
 
   // Filter operators text
   filterOperatorContains: 'contains',
