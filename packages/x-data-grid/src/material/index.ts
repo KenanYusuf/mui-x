@@ -36,6 +36,7 @@ import {
   GridClearIcon,
   GridLoadIcon,
   GridDeleteForeverIcon,
+  GridDeleteIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
@@ -46,7 +47,7 @@ const iconSlots: GridIconSlotsComponent = {
   booleanCellFalseIcon: GridCloseIcon,
   columnMenuIcon: GridTripleDotsVerticalIcon,
   openFilterButtonIcon: GridFilterListIcon,
-  filterPanelDeleteIcon: GridCloseIcon,
+  filterPanelDeleteIcon: GridDeleteIcon,
   columnFilteredIcon: GridFilterAltIcon,
   columnSelectorIcon: GridColumnIcon,
   columnUnsortedIcon: GridColumnUnsortedIcon,

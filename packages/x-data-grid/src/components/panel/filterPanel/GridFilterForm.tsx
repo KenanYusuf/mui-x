@@ -8,6 +8,7 @@ import {
 import { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
+import Typography from '@mui/material/Typography';
 import {
   gridFilterableColumnDefinitionsSelector,
   gridColumnLookupSelector,
@@ -146,7 +147,8 @@ const GridFilterFormRoot = styled('div', {
   overridesResolver: (props, styles) => styles.filterForm,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   display: 'flex',
-  padding: theme.spacing(1),
+  alignItems: 'center',
+  gap: theme.spacing(1),
 }));
 
 const FilterFormDeleteIcon = styled('div', {
@@ -155,9 +157,7 @@ const FilterFormDeleteIcon = styled('div', {
   overridesResolver: (_, styles) => styles.filterFormDeleteIcon,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   flexShrink: 0,
-  justifyContent: 'flex-end',
-  marginRight: theme.spacing(0.5),
-  marginBottom: theme.spacing(0.2),
+  margin: theme.spacing(0, -0.25),
 }));
 
 const FilterFormLogicOperatorInput = styled('div', {
@@ -165,9 +165,7 @@ const FilterFormLogicOperatorInput = styled('div', {
   slot: 'FilterFormLogicOperatorInput',
   overridesResolver: (_, styles) => styles.filterFormLogicOperatorInput,
 })<{ ownerState: OwnerState }>({
-  minWidth: 55,
-  marginRight: 5,
-  justifyContent: 'end',
+  width: '100%',
 });
 
 const FilterFormColumnInput = styled('div', {
@@ -424,83 +422,66 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
         ownerState={rootProps}
         {...other}
       >
-        <FilterFormDeleteIcon
-          variant="standard"
-          as={rootProps.slots.baseFormControl}
-          {...baseFormControlProps}
-          {...deleteIconProps}
-          className={clsx(
-            classes.deleteIcon,
-            baseFormControlProps.className,
-            deleteIconProps.className,
+        <div style={{ display: 'flex', alignItems: 'center', width: 75 }}>
+          {!showMultiFilterOperators && (
+            <Typography variant="body1" sx={{ ml: 1.5 }}>
+              Where
+            </Typography>
           )}
-          ownerState={rootProps}
-        >
-          <rootProps.slots.baseIconButton
-            aria-label={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
-            title={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
-            onClick={handleDeleteFilter}
-            size="small"
-            disabled={readOnly}
-            {...rootProps.slotProps?.baseIconButton}
+          <FilterFormLogicOperatorInput
+            as={rootProps.slots.baseFormControl}
+            {...baseFormControlProps}
+            {...logicOperatorInputProps}
+            sx={[
+              hasLogicOperatorColumn
+                ? {
+                    display: 'flex',
+                  }
+                : {
+                    display: 'none',
+                  },
+              showMultiFilterOperators
+                ? {
+                    display: 'flex',
+                  }
+                : {
+                    display: 'none',
+                  },
+              baseFormControlProps.sx,
+              logicOperatorInputProps.sx,
+            ]}
+            className={clsx(
+              classes.logicOperatorInput,
+              baseFormControlProps.className,
+              logicOperatorInputProps.className,
+            )}
+            ownerState={rootProps}
           >
-            <rootProps.slots.filterPanelDeleteIcon fontSize="small" />
-          </rootProps.slots.baseIconButton>
-        </FilterFormDeleteIcon>
-        <FilterFormLogicOperatorInput
-          variant="standard"
-          as={rootProps.slots.baseFormControl}
-          {...baseFormControlProps}
-          {...logicOperatorInputProps}
-          sx={[
-            hasLogicOperatorColumn
-              ? {
-                  display: 'flex',
-                }
-              : {
-                  display: 'none',
-                },
-            showMultiFilterOperators
-              ? {
-                  visibility: 'visible',
-                }
-              : {
-                  visibility: 'hidden',
-                },
-            baseFormControlProps.sx,
-            logicOperatorInputProps.sx,
-          ]}
-          className={clsx(
-            classes.logicOperatorInput,
-            baseFormControlProps.className,
-            logicOperatorInputProps.className,
-          )}
-          ownerState={rootProps}
-        >
-          <rootProps.slots.baseSelect
-            inputProps={{
-              'aria-label': apiRef.current.getLocaleText('filterPanelLogicOperator'),
-            }}
-            value={multiFilterOperator ?? ''}
-            onChange={changeLogicOperator}
-            disabled={!!disableMultiFilterOperator || logicOperators.length === 1}
-            native={isBaseSelectNative}
-            {...rootProps.slotProps?.baseSelect}
-          >
-            {logicOperators.map((logicOperator) => (
-              <rootProps.slots.baseSelectOption
-                {...baseSelectOptionProps}
-                native={isBaseSelectNative}
-                key={logicOperator.toString()}
-                value={logicOperator.toString()}
-              >
-                {apiRef.current.getLocaleText(getLogicOperatorLocaleKey(logicOperator))}
-              </rootProps.slots.baseSelectOption>
-            ))}
-          </rootProps.slots.baseSelect>
-        </FilterFormLogicOperatorInput>
+            <rootProps.slots.baseSelect
+              size="small"
+              inputProps={{
+                'aria-label': apiRef.current.getLocaleText('filterPanelLogicOperator'),
+              }}
+              value={multiFilterOperator ?? ''}
+              onChange={changeLogicOperator}
+              disabled={!!disableMultiFilterOperator || logicOperators.length === 1}
+              native={isBaseSelectNative}
+              {...rootProps.slotProps?.baseSelect}
+            >
+              {logicOperators.map((logicOperator) => (
+                <rootProps.slots.baseSelectOption
+                  {...baseSelectOptionProps}
+                  native={isBaseSelectNative}
+                  key={logicOperator.toString()}
+                  value={logicOperator.toString()}
+                >
+                  {apiRef.current.getLocaleText(getLogicOperatorLocaleKey(logicOperator))}
+                </rootProps.slots.baseSelectOption>
+              ))}
+            </rootProps.slots.baseSelect>
+          </FilterFormLogicOperatorInput>
+        </div>
         <FilterFormColumnInput
-          variant="standard"
           as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
           {...columnInputProps}
@@ -519,9 +500,10 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             {apiRef.current.getLocaleText('filterPanelColumns')}
           </rootProps.slots.baseInputLabel>
           <rootProps.slots.baseSelect
-            labelId={columnSelectLabelId}
+            size="small"
             id={columnSelectId}
             label={apiRef.current.getLocaleText('filterPanelColumns')}
+            labelId={columnSelectLabelId}
             value={selectedField ?? ''}
             onChange={changeColumn}
             native={isBaseSelectNative}
@@ -541,7 +523,6 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           </rootProps.slots.baseSelect>
         </FilterFormColumnInput>
         <FilterFormOperatorInput
-          variant="standard"
           as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
           {...operatorInputProps}
@@ -560,6 +541,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             {apiRef.current.getLocaleText('filterPanelOperator')}
           </rootProps.slots.baseInputLabel>
           <rootProps.slots.baseSelect
+            size="small"
             labelId={operatorSelectLabelId}
             label={apiRef.current.getLocaleText('filterPanelOperator')}
             id={operatorSelectId}
@@ -586,7 +568,6 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           </rootProps.slots.baseSelect>
         </FilterFormOperatorInput>
         <FilterFormValueInput
-          variant="standard"
           as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
           {...valueInputPropsOther}
@@ -599,6 +580,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
         >
           {currentOperator?.InputComponent ? (
             <currentOperator.InputComponent
+              variant="outlined"
+              size="small"
               apiRef={apiRef}
               item={item}
               applyValue={applyFilterChanges}
@@ -610,6 +593,28 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             />
           ) : null}
         </FilterFormValueInput>
+        <FilterFormDeleteIcon
+          as={rootProps.slots.baseFormControl}
+          {...baseFormControlProps}
+          {...deleteIconProps}
+          className={clsx(
+            classes.deleteIcon,
+            baseFormControlProps.className,
+            deleteIconProps.className,
+          )}
+          ownerState={rootProps}
+        >
+          <rootProps.slots.baseIconButton
+            aria-label={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
+            title={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
+            onClick={handleDeleteFilter}
+            size="small"
+            disabled={readOnly}
+            {...rootProps.slotProps?.baseIconButton}
+          >
+            <rootProps.slots.filterPanelDeleteIcon fontSize="small" />
+          </rootProps.slots.baseIconButton>
+        </FilterFormDeleteIcon>
       </GridFilterFormRoot>
     );
   },

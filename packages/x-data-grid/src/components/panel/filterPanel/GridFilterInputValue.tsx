@@ -32,7 +32,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     isFilterActive,
     clearButton,
     InputProps,
-    variant = 'standard',
+    variant = 'outlined',
     ...others
   } = props;
   const filterTimeout = useTimeout();

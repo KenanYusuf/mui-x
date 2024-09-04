@@ -23,13 +23,15 @@ const GridPanelContentRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PanelContent',
   overridesResolver: (props, styles) => styles.panelContent,
-})<{ ownerState: OwnerState }>({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
+  gap: theme.spacing(2.5),
+  padding: theme.spacing(2, 1.5),
   overflow: 'auto',
   flex: '1 1',
   maxHeight: 400,
-});
+}));
 
 function GridPanelContent(props: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }) {
   const { className, ...other } = props;
