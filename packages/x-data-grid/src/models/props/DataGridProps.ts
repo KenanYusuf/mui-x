@@ -857,7 +857,7 @@ export interface DataGridProSharedPropsWithDefaultValue {
   rowSelectionPropagation: GridRowSelectionPropagation;
   /**
    * If `true`, displays the data in a list view.
-   * Use in combination with `unstable_listColumn`.
+   * Use in combination with `unstable_listViewColumn`.
    * @default false
    */
   unstable_listView: boolean;
@@ -872,7 +872,7 @@ export interface DataGridProSharedPropsWithoutDefaultValue<R extends GridValidRo
   /**
    * Definition of the column rendered when the `unstable_listView` prop is enabled.
    */
-  unstable_listColumn?: GridListColDef<R>;
+  unstable_listViewColumn?: GridListColDef<R>;
 }
 
 export interface DataGridPremiumSharedPropsWithDefaultValue {

@@ -1109,7 +1109,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Definition of the column rendered when the `unstable_listView` prop is enabled.
    */
-  unstable_listColumn: PropTypes.shape({
+  unstable_listViewColumn: PropTypes.shape({
     align: PropTypes.oneOf(['center', 'left', 'right']),
     cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
     display: PropTypes.oneOf(['flex', 'text']),
@@ -1118,7 +1118,7 @@ DataGridPremiumRaw.propTypes = {
   }),
   /**
    * If `true`, displays the data in a list view.
-   * Use in combination with `unstable_listColumn`.
+   * Use in combination with `unstable_listViewColumn`.
    */
   unstable_listView: PropTypes.bool,
   unstable_onDataSourceError: PropTypes.func,

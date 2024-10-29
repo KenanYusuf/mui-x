@@ -10,15 +10,15 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 export type GridListViewState = (GridListColDef & { computedWidth: number }) | undefined;
 
 export const listViewStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'unstable_listColumn'>
+  Pick<DataGridProcessedProps, 'unstable_listViewColumn'>
 > = (state, props, apiRef) => ({
   ...state,
-  listViewColumn: { ...props.unstable_listColumn, computedWidth: getListColumnWidth(apiRef) },
+  listViewColumn: { ...props.unstable_listViewColumn, computedWidth: getListColumnWidth(apiRef) },
 });
 
 export function useGridListView(
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'unstable_listColumn'>,
+  props: Pick<DataGridProcessedProps, 'unstable_listViewColumn'>,
 ) {
   /*
    * EVENTS
@@ -55,7 +55,7 @@ export function useGridListView(
    * EFFECTS
    */
   React.useEffect(() => {
-    const listColumn = props.unstable_listColumn;
+    const listColumn = props.unstable_listViewColumn;
     if (listColumn) {
       apiRef.current.setState((state) => {
         return {
@@ -67,7 +67,7 @@ export function useGridListView(
         };
       });
     }
-  }, [apiRef, props.unstable_listColumn]);
+  }, [apiRef, props.unstable_listViewColumn]);
 }
 
 function getListColumnWidth(apiRef: React.MutableRefObject<GridPrivateApiCommunity>) {

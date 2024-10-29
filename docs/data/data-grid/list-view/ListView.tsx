@@ -105,7 +105,7 @@ export default function ListView() {
           columns={columns}
           rowHeight={rowHeight}
           unstable_listView={isListView}
-          unstable_listColumn={listColDef}
+          unstable_listViewColumn={listColDef}
         />
       </Box>
     </Box>

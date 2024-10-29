@@ -140,7 +140,7 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
   keepColumnPositionIfDraggedOutside: boolean;
   /**
    * If `true`, displays the data in a list view.
-   * Use in combination with `unstable_listColumn`.
+   * Use in combination with `unstable_listViewColumn`.
    */
   unstable_listView: boolean;
 }
@@ -254,5 +254,5 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
   /**
    * Definition of the column rendered when the `unstable_listView` prop is enabled.
    */
-  unstable_listColumn?: GridListColDef<R>;
+  unstable_listViewColumn?: GridListColDef<R>;
 }

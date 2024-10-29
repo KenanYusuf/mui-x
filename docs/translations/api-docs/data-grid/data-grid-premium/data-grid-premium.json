@@ -661,11 +661,11 @@
     "treeData": {
       "description": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop."
     },
-    "unstable_listColumn": {
+    "unstable_listViewColumn": {
       "description": "Definition of the column rendered when the <code>unstable_listView</code> prop is enabled."
     },
     "unstable_listView": {
-      "description": "If <code>true</code>, displays the data in a list view. Use in combination with <code>unstable_listColumn</code>."
+      "description": "If <code>true</code>, displays the data in a list view. Use in combination with <code>unstable_listViewColumn</code>."
     },
     "unstable_rowSpanning": {
       "description": "If <code>true</code>, the Data Grid will auto span the cells over the rows having the same value."

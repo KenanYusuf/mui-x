@@ -295,7 +295,7 @@ export default function ListViewAdvanced() {
             },
           }}
           unstable_listView={isListView}
-          unstable_listColumn={listColDef}
+          unstable_listViewColumn={listColDef}
           pagination
           pageSizeOptions={[10]}
           initialState={{
