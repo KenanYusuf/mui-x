@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { gridVisibleColumnDefinitionsSelector } from '../features/columns/gridColumnsSelector';
-import { useGridSelector } from './useGridSelector';
+import { useGridSelector, useGridSelectorV8 } from './useGridSelector';
 import { useGridRootProps } from './useGridRootProps';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../features/columnGrouping/gridColumnGroupsSelector';
 import { gridPinnedRowsCountSelector } from '../features/rows/gridRowsSelector';
@@ -11,7 +11,8 @@ import { gridExpandedRowCountSelector } from '../features/filter/gridFilterSelec
 export const useGridAriaAttributes = (): React.HTMLAttributes<HTMLElement> => {
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
-  const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
+  const listView = rootProps.unstable_listView;
+  const visibleColumns = useGridSelectorV8(apiRef, gridVisibleColumnDefinitionsSelector, listView);
   const accessibleRowCount = useGridSelector(apiRef, gridExpandedRowCountSelector);
   const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
   const pinnedRowsCount = useGridSelector(apiRef, gridPinnedRowsCountSelector);
@@ -19,7 +20,9 @@ export const useGridAriaAttributes = (): React.HTMLAttributes<HTMLElement> => {
   return {
     role: 'grid',
     'aria-colcount': visibleColumns.length,
-    'aria-rowcount': headerGroupingMaxDepth + 1 + pinnedRowsCount + accessibleRowCount,
+    'aria-rowcount': listView
+      ? accessibleRowCount
+      : headerGroupingMaxDepth + 1 + pinnedRowsCount + accessibleRowCount,
     'aria-multiselectable': isMultipleRowSelectionEnabled(rootProps),
   };
 };

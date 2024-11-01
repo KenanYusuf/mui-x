@@ -31,7 +31,9 @@ export const getColumnsToExport = ({
     }, []);
   }
 
-  const validColumns = options.allColumns ? columns : gridVisibleColumnDefinitionsSelector(apiRef);
+  const validColumns = options.allColumns
+    ? columns
+    : gridVisibleColumnDefinitionsSelector(apiRef, false);
   return validColumns.filter((column) => !column.disableExport);
 };
 

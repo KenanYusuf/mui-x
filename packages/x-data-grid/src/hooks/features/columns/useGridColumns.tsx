@@ -105,6 +105,7 @@ export function useGridColumns(
   /**
    * API METHODS
    */
+  // TODO: Some of these may need updating to include list view column
   const getColumn = React.useCallback<GridColumnApi['getColumn']>(
     (field) => gridColumnLookupSelector(apiRef)[field],
     [apiRef],

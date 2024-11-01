@@ -95,9 +95,8 @@ export const useGridKeyboardNavigation = (
           colIndex = nextCellColSpanInfo.rightVisibleCellIndex;
         }
       }
-      const field = listView
-        ? gridListColumnSelector(apiRef.current.state)!.field
-        : gridVisibleColumnFieldsSelector(apiRef)[colIndex];
+      const field = gridVisibleColumnFieldsSelector(apiRef, listView)[colIndex];
+
       const nonRowSpannedRowId = findNonRowSpannedCell(apiRef, rowId, field, rowSpanScanDirection);
       // `scrollToIndexes` requires a rowIndex relative to all visible rows.
       // Those rows do not include pinned rows, but pinned rows do not need scroll anyway.
@@ -170,7 +169,7 @@ export const useGridKeyboardNavigation = (
       const firstRowIndexInPage = currentPageRows.length > 0 ? 0 : null;
       const lastRowIndexInPage = currentPageRows.length - 1;
       const firstColIndex = 0;
-      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
+      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef, listView).length - 1;
       const columnGroupMaxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
       let shouldPreventDefault = true;
 
@@ -274,6 +273,7 @@ export const useGridKeyboardNavigation = (
       isRtl,
       goToHeader,
       goToGroupHeader,
+      listView,
     ],
   );
 
@@ -291,7 +291,7 @@ export const useGridKeyboardNavigation = (
       const firstRowIndexInPage = 0;
       const lastRowIndexInPage = currentPageRows.length - 1;
       const firstColIndex = 0;
-      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
+      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef, false).length - 1;
       let shouldPreventDefault = true;
 
       switch (event.key) {
@@ -403,7 +403,7 @@ export const useGridKeyboardNavigation = (
       const firstRowIndexInPage = 0;
       const lastRowIndexInPage = currentPageRows.length - 1;
       const firstColIndex = 0;
-      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
+      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef, false).length - 1;
 
       let shouldPreventDefault = true;
 
@@ -516,9 +516,7 @@ export const useGridKeyboardNavigation = (
       const firstRowIndexInPage = 0;
       const lastRowIndexInPage = currentPageRows.length - 1;
       const firstColIndex = 0;
-      const visibleColumns = listView
-        ? [gridListColumnSelector(apiRef.current.state)]
-        : gridVisibleColumnDefinitionsSelector(apiRef);
+      const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef, listView);
       const lastColIndex = visibleColumns.length - 1;
       let shouldPreventDefault = true;
 

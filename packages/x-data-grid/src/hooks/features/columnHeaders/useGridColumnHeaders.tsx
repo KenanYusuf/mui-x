@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { useGridSelector } from '../../utils';
+import { useGridSelector, useGridSelectorV8 } from '../../utils';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import type { GridColumnsRenderContext } from '../../../models/params/gridScrollParams';
@@ -103,10 +103,10 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const hasVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
   const columnGroupsModel = useGridSelector(apiRef, gridColumnGroupsUnwrappedModelSelector);
-  const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
+  const columnPositions = useGridSelectorV8(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
-  const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
-  const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
+  const pinnedColumns = useGridSelectorV8(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
+  const columnsLookup = useGridSelectorV8(apiRef, gridColumnLookupSelector);
   const offsetLeft = computeOffsetLeft(columnPositions, renderContext, pinnedColumns.left.length);
   const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
 

@@ -8,7 +8,7 @@ import { GridPanelFooter } from '../GridPanelFooter';
 import { GridPanelWrapper } from '../GridPanelWrapper';
 import { GridFilterForm, GridFilterFormProps } from './GridFilterForm';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { useGridSelector } from '../../../hooks/utils/useGridSelector';
+import { useGridSelector, useGridSelectorV8 } from '../../../hooks/utils/useGridSelector';
 import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
 import {
   gridFilterableColumnDefinitionsSelector,
@@ -74,8 +74,8 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
-    const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
-    const filterableColumnsLookup = useGridSelector(apiRef, gridFilterableColumnLookupSelector);
+    const filterableColumns = useGridSelectorV8(apiRef, gridFilterableColumnDefinitionsSelector);
+    const filterableColumnsLookup = useGridSelectorV8(apiRef, gridFilterableColumnLookupSelector);
     const lastFilterRef = React.useRef<any>(null);
     const placeholderFilter = React.useRef<GridFilterItem | null>(null);
 

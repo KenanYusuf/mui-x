@@ -6,13 +6,14 @@ import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 import { gridVisibleColumnDefinitionsSelector } from '../../../../hooks/features/columns';
+import { useGridSelectorV8 } from '../../../../hooks';
 
 function GridColumnMenuHideItem(props: GridColumnMenuItemProps) {
   const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
-  const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
+  const visibleColumns = useGridSelectorV8(apiRef, gridVisibleColumnDefinitionsSelector);
   const columnsWithMenu = visibleColumns.filter((col) => col.disableColumnMenu !== true);
   // do not allow to hide the last column with menu
   const disabled = columnsWithMenu.length === 1;

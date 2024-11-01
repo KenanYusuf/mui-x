@@ -24,7 +24,7 @@ import {
 import { gridDimensionsSelector } from './gridDimensionsSelectors';
 import { gridDensityFactorSelector } from '../density';
 import { gridRenderContextSelector } from '../virtualization';
-import { useGridSelector } from '../../utils';
+import { useGridSelector, useGridSelectorV8 } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import {
@@ -95,7 +95,7 @@ export function useGridDimensions(
   const rootDimensionsRef = React.useRef(EMPTY_SIZE);
   const dimensionsState = useGridSelector(apiRef, gridDimensionsSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
-  const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
+  const pinnedColumns = useGridSelectorV8(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const validRowHeight = React.useMemo(
     () =>

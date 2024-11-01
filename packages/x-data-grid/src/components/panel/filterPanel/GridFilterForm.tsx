@@ -9,11 +9,11 @@ import { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import {
-  gridFilterableColumnDefinitionsSelector,
   gridColumnLookupSelector,
+  gridFilterableColumnDefinitionsSelector,
 } from '../../../hooks/features/columns/gridColumnsSelector';
 import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
-import { useGridSelector } from '../../../hooks/utils/useGridSelector';
+import { useGridSelector, useGridSelectorV8 } from '../../../hooks/utils/useGridSelector';
 import { GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
@@ -227,8 +227,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       ...other
     } = props;
     const apiRef = useGridApiContext();
-    const columnLookup = useGridSelector(apiRef, gridColumnLookupSelector);
-    const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
+    const columnLookup = useGridSelectorV8(apiRef, gridColumnLookupSelector);
+    const filterableColumns = useGridSelectorV8(apiRef, gridFilterableColumnDefinitionsSelector);
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const columnSelectId = useId();
     const columnSelectLabelId = useId();

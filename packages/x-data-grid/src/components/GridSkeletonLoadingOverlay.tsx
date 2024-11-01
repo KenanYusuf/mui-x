@@ -14,6 +14,7 @@ import {
   gridVisiblePinnedColumnDefinitionsSelector,
   useGridApiEventHandler,
   useGridSelector,
+  useGridSelectorV8,
 } from '../hooks';
 import { GridEventListener } from '../models';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
@@ -61,18 +62,18 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const viewportHeight = dimensions?.viewportInnerSize.height ?? 0;
   const skeletonRowsCount = Math.ceil(viewportHeight / dimensions.rowHeight);
-  const totalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
-  const positions = useGridSelector(apiRef, gridColumnPositionsSelector);
+  const totalWidth = useGridSelectorV8(apiRef, gridColumnsTotalWidthSelector);
+  const positions = useGridSelectorV8(apiRef, gridColumnPositionsSelector);
   const inViewportCount = React.useMemo(
     () => positions.filter((value) => value <= totalWidth).length,
     [totalWidth, positions],
   );
-  const allVisibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
+  const allVisibleColumns = useGridSelectorV8(apiRef, gridVisibleColumnDefinitionsSelector);
   const columns = React.useMemo(
     () => allVisibleColumns.slice(0, inViewportCount),
     [allVisibleColumns, inViewportCount],
   );
-  const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
+  const pinnedColumns = useGridSelectorV8(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
 
   const getPinnedStyle = React.useCallback(
     (computedWidth: number, index: number, position: GridPinnedColumnPosition) => {

@@ -74,7 +74,7 @@ export const useGridColumnPinning = (
         return initialValue;
       }
 
-      const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
+      const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef, false);
       const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef);
       const columnPositions = gridColumnPositionsSelector(apiRef);
       const clientWidth = apiRef.current.virtualScrollerRef!.current!.clientWidth;
@@ -131,7 +131,7 @@ export const useGridColumnPinning = (
       }
 
       if (visiblePinnedColumns.right.length > 0) {
-        const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
+        const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef, false);
         const firstRightPinnedColumnIndex =
           visibleColumns.length - visiblePinnedColumns.right.length;
         return targetIndex >= firstRightPinnedColumnIndex ? false : initialValue;

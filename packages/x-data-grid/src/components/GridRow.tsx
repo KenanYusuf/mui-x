@@ -13,7 +13,11 @@ import { GridPinnedColumns } from '../hooks/features/columns';
 import type { GridStateColDef } from '../models/colDef/gridColDef';
 import type { GridRenderContext } from '../models/params/gridScrollParams';
 import { gridColumnPositionsSelector } from '../hooks/features/columns/gridColumnsSelector';
-import { useGridSelector, objectShallowCompare } from '../hooks/utils/useGridSelector';
+import {
+  useGridSelector,
+  objectShallowCompare,
+  useGridSelectorV8,
+} from '../hooks/utils/useGridSelector';
 import { GridRowClassNameParams } from '../models/params/gridRowParams';
 import { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 import { findParentElementFromClassName, isEventTargetInPortal } from '../utils/domUtils';
@@ -126,7 +130,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const currentPage = useGridVisibleRows(apiRef, rootProps);
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
-  const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
+  const columnPositions = useGridSelectorV8(apiRef, gridColumnPositionsSelector);
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
   const handleRef = useForkRef(ref, refProp);
   const rowNode = apiRef.current.getRowNode(rowId);

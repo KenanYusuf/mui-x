@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
+import { createSelectorMemoizedV8, createSelectorV8 } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
   GridColumnLookup,
@@ -6,6 +6,7 @@ import {
   EMPTY_PINNED_COLUMN_FIELDS,
 } from './gridColumnsInterfaces';
 import { gridIsRtlSelector } from '../../core/gridCoreSelector';
+import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 
 /**
  * Get the columns state
@@ -17,7 +18,7 @@ export const gridColumnsStateSelector = (state: GridStateCommunity) => state.col
  * Get an array of column fields in the order rendered on screen.
  * @category Columns
  */
-export const gridColumnFieldsSelector = createSelector(
+export const gridColumnFieldsSelector = createSelectorV8(
   gridColumnsStateSelector,
   (columnsState) => columnsState.orderedFields,
 );
@@ -26,7 +27,7 @@ export const gridColumnFieldsSelector = createSelector(
  * Get the columns as a lookup (an object containing the field for keys and the definition for values).
  * @category Columns
  */
-export const gridColumnLookupSelector = createSelector(
+export const gridColumnLookupSelector = createSelectorV8(
   gridColumnsStateSelector,
   (columnsState) => columnsState.lookup,
 );
@@ -35,7 +36,7 @@ export const gridColumnLookupSelector = createSelector(
  * Get an array of column definitions in the order rendered on screen..
  * @category Columns
  */
-export const gridColumnDefinitionsSelector = createSelectorMemoized(
+export const gridColumnDefinitionsSelector = createSelectorMemoizedV8(
   gridColumnFieldsSelector,
   gridColumnLookupSelector,
   (allFields, lookup) => allFields.map((field) => lookup[field]),
@@ -46,7 +47,7 @@ export const gridColumnDefinitionsSelector = createSelectorMemoized(
  * If a column is not registered in the model, it is visible.
  * @category Visible Columns
  */
-export const gridColumnVisibilityModelSelector = createSelector(
+export const gridColumnVisibilityModelSelector = createSelectorV8(
   gridColumnsStateSelector,
   (columnsState) => columnsState.columnVisibilityModel,
 );
@@ -55,18 +56,23 @@ export const gridColumnVisibilityModelSelector = createSelector(
  * Get the visible columns as a lookup (an object containing the field for keys and the definition for values).
  * @category Visible Columns
  */
-export const gridVisibleColumnDefinitionsSelector = createSelectorMemoized(
+export const gridVisibleColumnDefinitionsSelector = createSelectorMemoizedV8(
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
-  (columns, columnVisibilityModel) =>
-    columns.filter((column) => columnVisibilityModel[column.field] !== false),
+  gridListColumnSelector,
+  (columns, columnVisibilityModel, listColumn, listView?: boolean) => {
+    if (listView) {
+      return listColumn ? [listColumn] : [];
+    }
+    return columns.filter((column) => columnVisibilityModel[column.field] !== false);
+  },
 );
 
 /**
  * Get the field of each visible column.
  * @category Visible Columns
  */
-export const gridVisibleColumnFieldsSelector = createSelectorMemoized(
+export const gridVisibleColumnFieldsSelector = createSelectorMemoizedV8(
   gridVisibleColumnDefinitionsSelector,
   (visibleColumns) => visibleColumns.map((column) => column.field),
 );
@@ -81,7 +87,7 @@ export const gridPinnedColumnsSelector = (state: GridStateCommunity) => state.pi
  * Get the visible pinned columns.
  * @category Visible Columns
  */
-export const gridVisiblePinnedColumnDefinitionsSelector = createSelectorMemoized(
+export const gridVisiblePinnedColumnDefinitionsSelector = createSelectorMemoizedV8(
   gridColumnsStateSelector,
   gridPinnedColumnsSelector,
   gridVisibleColumnFieldsSelector,
@@ -134,7 +140,7 @@ function filterVisibleColumns(
  * Get the left position in pixel of each visible columns relative to the left of the first column.
  * @category Visible Columns
  */
-export const gridColumnPositionsSelector = createSelectorMemoized(
+export const gridColumnPositionsSelector = createSelectorMemoizedV8(
   gridVisibleColumnDefinitionsSelector,
   (visibleColumns) => {
     const positions: number[] = [];
@@ -153,7 +159,7 @@ export const gridColumnPositionsSelector = createSelectorMemoized(
  * Get the summed width of all the visible columns.
  * @category Visible Columns
  */
-export const gridColumnsTotalWidthSelector = createSelector(
+export const gridColumnsTotalWidthSelector = createSelectorV8(
   gridVisibleColumnDefinitionsSelector,
   gridColumnPositionsSelector,
   (visibleColumns, positions) => {
@@ -169,7 +175,7 @@ export const gridColumnsTotalWidthSelector = createSelector(
  * Get the filterable columns as an array.
  * @category Columns
  */
-export const gridFilterableColumnDefinitionsSelector = createSelectorMemoized(
+export const gridFilterableColumnDefinitionsSelector = createSelectorMemoizedV8(
   gridColumnDefinitionsSelector,
   (columns) => columns.filter((col) => col.filterable),
 );
@@ -178,7 +184,7 @@ export const gridFilterableColumnDefinitionsSelector = createSelectorMemoized(
  * Get the filterable columns as a lookup (an object containing the field for keys and the definition for values).
  * @category Columns
  */
-export const gridFilterableColumnLookupSelector = createSelectorMemoized(
+export const gridFilterableColumnLookupSelector = createSelectorMemoizedV8(
   gridColumnDefinitionsSelector,
   (columns) =>
     columns.reduce<GridColumnLookup>((acc, col) => {
@@ -194,7 +200,7 @@ export const gridFilterableColumnLookupSelector = createSelectorMemoized(
  * @category Columns
  * @ignore - Do not document
  */
-export const gridHasColSpanSelector = createSelectorMemoized(
+export const gridHasColSpanSelector = createSelectorMemoizedV8(
   gridColumnDefinitionsSelector,
   (columns) => columns.some((column) => column.colSpan !== undefined),
 );

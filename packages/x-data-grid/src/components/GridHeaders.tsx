@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
-import { useGridSelector } from '../hooks/utils/useGridSelector';
+import { useGridSelector, useGridSelectorV8 } from '../hooks/utils/useGridSelector';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
   gridColumnVisibilityModelSelector,
@@ -26,7 +26,7 @@ function GridHeaders() {
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
 
-  const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
+  const visibleColumns = useGridSelectorV8(apiRef, gridVisibleColumnDefinitionsSelector);
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const columnHeaderTabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
@@ -42,7 +42,7 @@ function GridHeaders() {
   const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
 
   const columnMenuState = useGridSelector(apiRef, gridColumnMenuSelector);
-  const columnVisibility = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
+  const columnVisibility = useGridSelectorV8(apiRef, gridColumnVisibilityModelSelector);
   const columnGroupsHeaderStructure = useGridSelector(
     apiRef,
     gridColumnGroupsHeaderStructureSelector,

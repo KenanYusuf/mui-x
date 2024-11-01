@@ -5,6 +5,7 @@ import {
   gridVisibleColumnDefinitionsSelector,
   useGridApiMethod,
   gridDimensionsSelector,
+  useGridSelectorV8,
 } from '@mui/x-data-grid';
 import {
   useGridVisibleRows,
@@ -33,10 +34,19 @@ export const useGridInfiniteLoader = (
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'onRowsScrollEnd' | 'pagination' | 'paginationMode' | 'rowsLoadingMode' | 'scrollEndThreshold'
+    | 'onRowsScrollEnd'
+    | 'pagination'
+    | 'paginationMode'
+    | 'rowsLoadingMode'
+    | 'scrollEndThreshold'
+    | 'unstable_listView'
   >,
 ): void => {
-  const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
+  const visibleColumns = useGridSelectorV8(
+    apiRef,
+    gridVisibleColumnDefinitionsSelector,
+    props.unstable_listView,
+  );
   const currentPage = useGridVisibleRows(apiRef, props);
   const observer = React.useRef<IntersectionObserver>();
   const updateTargetTimeout = useTimeout();

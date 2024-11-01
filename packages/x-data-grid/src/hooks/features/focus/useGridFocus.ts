@@ -38,7 +38,7 @@ export const focusStateInitializer: GridStateInitializer = (state) => ({
  */
 export const useGridFocus = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
+  props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode' | 'unstable_listView'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFocus');
 
@@ -207,7 +207,7 @@ export const useGridFocus = (
   const moveFocusToRelativeCell = React.useCallback<GridFocusPrivateApi['moveFocusToRelativeCell']>(
     (id, field, direction) => {
       let columnIndexToFocus = apiRef.current.getColumnIndex(field);
-      const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
+      const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef, props.unstable_listView);
 
       const currentPage = getVisibleRows(apiRef, {
         pagination: props.pagination,
@@ -273,7 +273,7 @@ export const useGridFocus = (
       const columnToFocus = visibleColumns[columnIndexToFocus];
       apiRef.current.setCellFocus(rowToFocus.id, columnToFocus.field);
     },
-    [apiRef, props.pagination, props.paginationMode],
+    [apiRef, props.pagination, props.paginationMode, props.unstable_listView],
   );
 
   const handleCellDoubleClick = React.useCallback<GridEventListener<'cellDoubleClick'>>(
@@ -470,7 +470,7 @@ export const useGridFocus = (
       return;
     }
 
-    const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
+    const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef, props.unstable_listView);
 
     apiRef.current.setState((state) => {
       return {

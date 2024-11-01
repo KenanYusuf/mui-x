@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { gridColumnDefinitionsSelector } from '../../hooks/features/columns/gridColumnsSelector';
-import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { useGridSelector, useGridSelectorV8 } from '../../hooks/utils/useGridSelector';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -8,7 +8,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export function GridPreferencesPanel() {
   const apiRef = useGridApiContext();
-  const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
+  const columns = useGridSelectorV8(apiRef, gridColumnDefinitionsSelector);
   const rootProps = useGridRootProps();
   const preferencePanelState = useGridSelector(apiRef, gridPreferencePanelStateSelector);
 

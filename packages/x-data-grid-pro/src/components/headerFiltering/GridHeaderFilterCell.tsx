@@ -23,6 +23,7 @@ import {
   gridFilterModelSelector,
   gridFilterableColumnLookupSelector,
   GridPinnedColumnPosition,
+  useGridSelectorV8,
 } from '@mui/x-data-grid';
 import {
   GridStateColDef,
@@ -123,7 +124,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     } = props;
 
     const apiRef = useGridPrivateApiContext();
-    const columnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
+    const columnFields = useGridSelectorV8(apiRef, gridVisibleColumnFieldsSelector);
     const rootProps = useGridRootProps();
     const cellRef = React.useRef<HTMLDivElement>(null);
     const handleRef = useForkRef(ref, cellRef);
@@ -144,7 +145,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       return colDef.filterOperators.filter((operator) => operator.value !== 'isAnyOf');
     }, [colDef.filterOperators]);
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
-    const filterableColumnsLookup = useGridSelector(apiRef, gridFilterableColumnLookupSelector);
+    const filterableColumnsLookup = useGridSelectorV8(apiRef, gridFilterableColumnLookupSelector);
 
     const isFilterReadOnly = React.useMemo(() => {
       if (!filterModel?.items.length) {

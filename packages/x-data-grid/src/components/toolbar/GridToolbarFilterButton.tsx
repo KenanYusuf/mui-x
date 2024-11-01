@@ -9,7 +9,7 @@ import {
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
-import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { useGridSelector, useGridSelectorV8 } from '../../hooks/utils/useGridSelector';
 import { gridFilterActiveItemsSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
@@ -57,7 +57,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
-    const lookup = useGridSelector(apiRef, gridColumnLookupSelector);
+    const lookup = useGridSelectorV8(apiRef, gridColumnLookupSelector);
     const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
     const classes = useUtilityClasses(rootProps);
     const filterButtonId = useId();

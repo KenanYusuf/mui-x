@@ -4,7 +4,7 @@ import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../internals/constants';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRenderContextSelector } from '../virtualization/gridVirtualizationSelectors';
-import { useGridSelector } from '../../utils/useGridSelector';
+import { useGridSelector, useGridSelectorV8 } from '../../utils/useGridSelector';
 import type { GridColDef } from '../../../models/colDef';
 import type { GridRowId, GridValidRowModel, GridRowEntry } from '../../../models/gridRows';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -225,7 +225,7 @@ export const useGridRowSpanning = (
 ): void => {
   const { range, rows: visibleRows } = useGridVisibleRows(apiRef, props);
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
-  const colDefs = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
+  const colDefs = useGridSelectorV8(apiRef, gridVisibleColumnDefinitionsSelector);
   const processedRange = useLazyRef<RowRange, void>(() => {
     return Object.keys(apiRef.current.state.rowSpanning.spannedCells).length > 0
       ? {

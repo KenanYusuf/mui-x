@@ -8,7 +8,7 @@ import {
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
 } from '../../hooks/features/columns/gridColumnsSelector';
-import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { useGridSelectorV8 } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -78,11 +78,11 @@ const collator = new Intl.Collator();
 function GridColumnsManagement(props: GridColumnsManagementProps) {
   const apiRef = useGridApiContext();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
-  const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
+  const columns = useGridSelectorV8(apiRef, gridColumnDefinitionsSelector);
   const initialColumnVisibilityModel = useLazyRef(() =>
     gridColumnVisibilityModelSelector(apiRef),
   ).current;
-  const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
+  const columnVisibilityModel = useGridSelectorV8(apiRef, gridColumnVisibilityModelSelector);
   const rootProps = useGridRootProps();
   const [searchValue, setSearchValue] = React.useState('');
   const classes = useUtilityClasses(rootProps);

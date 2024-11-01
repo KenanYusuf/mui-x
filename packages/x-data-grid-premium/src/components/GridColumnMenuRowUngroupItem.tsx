@@ -5,6 +5,7 @@ import {
   gridColumnLookupSelector,
   useGridSelector,
   GridColumnMenuItemProps,
+  useGridSelectorV8,
 } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { gridRowGroupingSanitizedModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
@@ -14,7 +15,7 @@ export function GridColumnMenuRowUngroupItem(props: GridColumnMenuItemProps) {
   const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
-  const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
+  const columnsLookup = useGridSelectorV8(apiRef, gridColumnLookupSelector);
   const rootProps = useGridRootProps();
 
   if (!colDef.groupable) {

@@ -11,7 +11,7 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass, gridClasses } from '../constants';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
-import { useGridSelector } from '../hooks/utils/useGridSelector';
+import { useGridSelector, useGridSelectorV8 } from '../hooks/utils/useGridSelector';
 import { gridDimensionsSelector } from '../hooks/features/dimensions/gridDimensionsSelectors';
 import { gridDensityFactorSelector } from '../hooks/features/density/densitySelector';
 import { gridColumnsTotalWidthSelector } from '../hooks/features/columns/gridColumnsSelector';
@@ -67,7 +67,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   const apiRef = useGridApiContext();
   const timeout = useTimeout();
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
-  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
+  const columnsTotalWidth = useGridSelectorV8(apiRef, gridColumnsTotalWidthSelector);
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
 
   const scrollPosition = React.useRef<GridScrollParams>({

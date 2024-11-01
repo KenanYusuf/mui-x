@@ -43,8 +43,15 @@ function applySelectorV8<Api extends GridApiCommon, Args, T>(
 
 const defaultCompare = Object.is;
 export const objectShallowCompare = fastObjectShallowCompare;
+const arrayShallowCompare = (a: any[], b: any[]) => {
+  if (a === b) {
+    return true;
+  }
 
-const createRefs = () => ({ state: null, equals: null, selector: null }) as any;
+  return a.length === b.length && a.every((v, i) => v === b[i]);
+};
+
+const createRefs = () => ({ state: null, equals: null, selector: null, args: null }) as any;
 
 // TODO v8: Remove this function
 export const useGridSelector = <Api extends GridApiCommon, T>(
@@ -98,7 +105,7 @@ export const useGridSelectorV8 = <Api extends GridApiCommon, Args, T>(
   apiRef: React.MutableRefObject<Api>,
   selector: Selector<Api, Args, T>,
   args: Args = undefined as Args,
-  equals: (a: T, b: T) => boolean = defaultCompare,
+  equals: <U = T>(a: U, b: U) => boolean = defaultCompare,
 ) => {
   if (process.env.NODE_ENV !== 'production') {
     if (!apiRef.current.state) {
@@ -114,6 +121,7 @@ export const useGridSelectorV8 = <Api extends GridApiCommon, Args, T>(
       state: T;
       equals: typeof equals;
       selector: typeof selector;
+      args: typeof args;
     },
     never
   >(createRefs);
@@ -127,13 +135,36 @@ export const useGridSelectorV8 = <Api extends GridApiCommon, Args, T>(
   refs.current.state = state;
   refs.current.equals = equals;
   refs.current.selector = selector;
+  const prevArgs = refs.current.args;
+  refs.current.args = args;
+
+  if (didInit) {
+    let argsEqual = Object.is;
+    if (args instanceof Array) {
+      argsEqual = arrayShallowCompare;
+    } else if (args instanceof Object) {
+      argsEqual = objectShallowCompare;
+    }
+    if (!argsEqual(prevArgs, args)) {
+      const newState = applySelectorV8(
+        apiRef,
+        refs.current.selector,
+        refs.current.args,
+        apiRef.current.instanceId,
+      ) as T;
+      if (!refs.current.equals(refs.current.state, newState)) {
+        refs.current.state = newState;
+        setState(newState);
+      }
+    }
+  }
 
   useOnMount(() => {
     return apiRef.current.store.subscribe(() => {
       const newState = applySelectorV8(
         apiRef,
         refs.current.selector,
-        args,
+        refs.current.args,
         apiRef.current.instanceId,
       ) as T;
       if (!refs.current.equals(refs.current.state, newState)) {
