@@ -30,15 +30,8 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
   name: 'MuiDataGrid',
   slot: 'ToolbarQuickFilter',
   overridesResolver: (props, styles) => styles.toolbarQuickFilter,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
+})<{ ownerState: OwnerState }>({
   width: 'auto',
-  paddingBottom: theme.spacing(0.5),
-  '& input': {
-    marginLeft: theme.spacing(0.5),
-  },
-  '& .MuiInput-underline:before': {
-    borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
-  },
   [`& input[type="search"]::-webkit-search-decoration,
   & input[type="search"]::-webkit-search-cancel-button,
   & input[type="search"]::-webkit-search-results-button,
@@ -46,7 +39,7 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
     /* clears the 'X' icon from Chrome */
     display: 'none',
   },
-}));
+});
 
 const defaultSearchValueParser = (searchText: string) =>
   searchText.split(' ').filter((word) => word !== '');
@@ -144,7 +137,8 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
     <GridToolbarQuickFilterRoot
       as={rootProps.slots.baseTextField}
       ownerState={rootProps}
-      variant="standard"
+      variant="outlined"
+      size="small"
       value={searchValue}
       onChange={handleSearchValueChange}
       className={clsx(classes.root, className)}
@@ -153,25 +147,32 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       type="search"
       {...other}
       InputProps={{
-        startAdornment: <rootProps.slots.quickFilterIcon fontSize="small" />,
+        startAdornment: (
+          <rootProps.slots.baseInputAdornment position="start">
+            <rootProps.slots.quickFilterIcon fontSize="small" />
+          </rootProps.slots.baseInputAdornment>
+        ),
         endAdornment: (
-          <rootProps.slots.baseIconButton
-            aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
-            size="small"
-            sx={[
-              searchValue
-                ? {
-                    visibility: 'visible',
-                  }
-                : {
-                    visibility: 'hidden',
-                  },
-            ]}
-            onClick={handleSearchReset}
-            {...rootProps.slotProps?.baseIconButton}
-          >
-            <rootProps.slots.quickFilterClearIcon fontSize="small" />
-          </rootProps.slots.baseIconButton>
+          <rootProps.slots.baseInputAdornment position="end">
+            <rootProps.slots.baseIconButton
+              aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
+              size="small"
+              sx={[
+                searchValue
+                  ? {
+                      visibility: 'visible',
+                    }
+                  : {
+                      visibility: 'hidden',
+                    },
+              ]}
+              onClick={handleSearchReset}
+              edge="end"
+              {...rootProps.slotProps?.baseIconButton}
+            >
+              <rootProps.slots.quickFilterClearIcon fontSize="small" />
+            </rootProps.slots.baseIconButton>
+          </rootProps.slots.baseInputAdornment>
         ),
         ...other.InputProps,
       }}
