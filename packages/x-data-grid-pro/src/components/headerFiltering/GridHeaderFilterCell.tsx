@@ -33,6 +33,8 @@ import {
   shouldCellShowLeftBorder,
   shouldCellShowRightBorder,
 } from '@mui/x-data-grid/internals';
+import { SxProps } from '@mui/system';
+import Box from '@mui/material/Box';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
@@ -88,9 +90,43 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const dateSx = {
+const inputSx: SxProps = {
+  flex: 1,
+  height: '100%',
+  '.MuiFilledInput-root': {
+    height: '100%',
+    backgroundColor: 'transparent',
+    borderRadius: 0,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+    '&.Mui-focused': {
+      backgroundColor: 'transparent',
+    },
+    '&::before': {
+      display: 'none',
+    },
+  },
+  '.MuiFilledInput-input': {
+    pl: 5,
+    fontSize: 14,
+    height: '100%',
+    boxSizing: 'border-box',
+  },
+  '.MuiInputLabel-filled': {
+    top: '50%',
+    transform: 'translate(40px, -50%) scale(1)',
+    fontSize: 14,
+    '&.MuiInputLabel-shrink': {
+      transform: 'translate(40px, calc(-50% - 8px)) scale(0.75)',
+    },
+  },
+};
+
+const dateSx: SxProps = {
   [`& input[value=""]:not(:focus)`]: { color: 'transparent' },
 };
+
 const defaultInputComponents: { [key in GridColType]: React.JSXElementConstructor<any> | null } = {
   string: GridFilterInputValue,
   number: GridFilterInputValue,
@@ -101,6 +137,7 @@ const defaultInputComponents: { [key in GridColType]: React.JSXElementConstructo
   actions: null,
   custom: null,
 };
+
 const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCellProps>(
   (props, ref) => {
     const {
@@ -331,6 +368,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
         style={{
           height,
           width,
+          padding: 0, // TODO: do properly
           ...styleProp,
         }}
         role="columnheader"
@@ -343,6 +381,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
         {InputComponent && headerFilterComponent === undefined ? (
           <React.Fragment>
             <InputComponent
+              variant="filled"
               apiRef={apiRef}
               item={item}
               inputRef={inputRef}
@@ -377,20 +416,27 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
               disabled={isFilterReadOnly || isNoInputOperator}
               tabIndex={-1}
               InputLabelProps={null}
-              sx={colDef.type === 'date' || colDef.type === 'dateTime' ? dateSx : undefined}
+              sx={[
+                inputSx,
+                colDef.type === 'date' || colDef.type === 'dateTime' ? dateSx : undefined,
+              ]}
               {...(isNoInputOperator ? { value: '' } : {})}
               {...currentOperator?.InputComponentProps}
               {...InputComponentProps}
             />
-            <GridHeaderFilterMenuContainer
-              operators={filterOperators!}
-              item={item}
-              field={colDef.field}
-              disabled={isFilterReadOnly}
-              applyFilterChanges={applyFilterChanges}
-              headerFilterMenuRef={headerFilterMenuRef}
-              buttonRef={buttonRef}
-            />
+            <Box
+              style={{ position: 'absolute', top: '50%', left: 4, transform: 'translateY(-50%)' }}
+            >
+              <GridHeaderFilterMenuContainer
+                operators={filterOperators!}
+                item={item}
+                field={colDef.field}
+                disabled={isFilterReadOnly}
+                applyFilterChanges={applyFilterChanges}
+                headerFilterMenuRef={headerFilterMenuRef}
+                buttonRef={buttonRef}
+              />
+            </Box>
           </React.Fragment>
         ) : null}
       </div>

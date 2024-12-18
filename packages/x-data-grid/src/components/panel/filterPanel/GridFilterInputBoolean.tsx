@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { refType, unstable_useId as useId } from '@mui/utils';
-import { styled } from '@mui/material/styles';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
@@ -26,15 +25,6 @@ export const sanitizeFilterItemValue = (value: any): boolean | undefined => {
   return undefined;
 };
 
-const BooleanOperatorContainer = styled('div')({
-  display: 'flex',
-  alignItems: 'center',
-  width: '100%',
-  [`& button`]: {
-    margin: 'auto 0px 5px 5px',
-  },
-});
-
 function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   const {
     item,
@@ -47,6 +37,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     label: labelProp,
     variant = 'standard',
     InputLabelProps,
+    sx,
     ...others
   } = props;
   const [filterValueState, setFilterValueState] = React.useState<boolean | undefined>(
@@ -79,57 +70,54 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
 
   return (
-    <BooleanOperatorContainer>
-      <rootProps.slots.baseFormControl fullWidth>
-        <rootProps.slots.baseInputLabel
-          {...rootProps.slotProps?.baseInputLabel}
-          id={labelId}
-          shrink
-          variant={variant}
-        >
-          {label}
-        </rootProps.slots.baseInputLabel>
-        <rootProps.slots.baseSelect
-          labelId={labelId}
-          id={selectId}
-          label={label}
-          value={filterValueState === undefined ? '' : String(filterValueState)}
-          onChange={onFilterChange}
-          variant={variant}
-          notched={variant === 'outlined' ? true : undefined}
+    <rootProps.slots.baseFormControl fullWidth sx={sx}>
+      <rootProps.slots.baseInputLabel
+        {...rootProps.slotProps?.baseInputLabel}
+        id={labelId}
+        shrink
+        variant={variant}
+      >
+        {label}
+      </rootProps.slots.baseInputLabel>
+      <rootProps.slots.baseSelect
+        labelId={labelId}
+        id={selectId}
+        label={label}
+        value={filterValueState === undefined ? '' : String(filterValueState)}
+        onChange={onFilterChange}
+        variant={variant}
+        notched={variant === 'outlined' ? true : undefined}
+        native={isSelectNative}
+        displayEmpty
+        inputProps={{ ref: focusElementRef, tabIndex }}
+        {
+          ...(others as any) /* FIXME: typing error */
+        }
+        {...baseSelectProps}
+      >
+        <rootProps.slots.baseSelectOption
+          {...baseSelectOptionProps}
           native={isSelectNative}
-          displayEmpty
-          inputProps={{ ref: focusElementRef, tabIndex }}
-          {
-            ...(others as any) /* FIXME: typing error */
-          }
-          {...baseSelectProps}
+          value=""
         >
-          <rootProps.slots.baseSelectOption
-            {...baseSelectOptionProps}
-            native={isSelectNative}
-            value=""
-          >
-            {apiRef.current.getLocaleText('filterValueAny')}
-          </rootProps.slots.baseSelectOption>
-          <rootProps.slots.baseSelectOption
-            {...baseSelectOptionProps}
-            native={isSelectNative}
-            value="true"
-          >
-            {apiRef.current.getLocaleText('filterValueTrue')}
-          </rootProps.slots.baseSelectOption>
-          <rootProps.slots.baseSelectOption
-            {...baseSelectOptionProps}
-            native={isSelectNative}
-            value="false"
-          >
-            {apiRef.current.getLocaleText('filterValueFalse')}
-          </rootProps.slots.baseSelectOption>
-        </rootProps.slots.baseSelect>
-      </rootProps.slots.baseFormControl>
-      {clearButton}
-    </BooleanOperatorContainer>
+          {apiRef.current.getLocaleText('filterValueAny')}
+        </rootProps.slots.baseSelectOption>
+        <rootProps.slots.baseSelectOption
+          {...baseSelectOptionProps}
+          native={isSelectNative}
+          value="true"
+        >
+          {apiRef.current.getLocaleText('filterValueTrue')}
+        </rootProps.slots.baseSelectOption>
+        <rootProps.slots.baseSelectOption
+          {...baseSelectOptionProps}
+          native={isSelectNative}
+          value="false"
+        >
+          {apiRef.current.getLocaleText('filterValueFalse')}
+        </rootProps.slots.baseSelectOption>
+      </rootProps.slots.baseSelect>
+    </rootProps.slots.baseFormControl>
   );
 }
 

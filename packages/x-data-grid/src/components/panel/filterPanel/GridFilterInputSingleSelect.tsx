@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { unstable_useId as useId } from '@mui/utils';
-import { styled } from '@mui/material/styles';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
@@ -46,15 +45,6 @@ const renderSingleSelectOptions = ({
   });
 };
 
-const SingleSelectOperatorContainer = styled('div')({
-  display: 'flex',
-  alignItems: 'flex-end',
-  width: '100%',
-  [`& button`]: {
-    margin: 'auto 0px 5px 5px',
-  },
-});
-
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
   TextFieldProps & {
     clearButton?: React.ReactNode | null;
@@ -80,6 +70,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     isFilterActive,
     clearButton,
     InputLabelProps,
+    sx,
     ...others
   } = props;
   const filterValue = item.value ?? '';
@@ -122,49 +113,46 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
 
   return (
-    <SingleSelectOperatorContainer>
-      <rootProps.slots.baseFormControl fullWidth>
-        <rootProps.slots.baseInputLabel
-          {...rootProps.slotProps?.baseInputLabel}
-          id={labelId}
-          htmlFor={id}
-          shrink
-          variant={variant}
-        >
-          {label}
-        </rootProps.slots.baseInputLabel>
-        <rootProps.slots.baseSelect
-          id={id}
-          label={label}
-          labelId={labelId}
-          value={filterValue}
-          onChange={onFilterChange}
-          variant={variant}
-          type={type || 'text'}
-          inputProps={{
-            tabIndex,
-            ref: focusElementRef,
-            placeholder: placeholder ?? apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
-          }}
-          native={isSelectNative}
-          notched={variant === 'outlined' ? true : undefined}
-          {
-            ...(others as any) /* FIXME: typing error */
-          }
-          {...rootProps.slotProps?.baseSelect}
-        >
-          {renderSingleSelectOptions({
-            column: resolvedColumn,
-            OptionComponent: rootProps.slots.baseSelectOption,
-            getOptionLabel,
-            getOptionValue,
-            isSelectNative,
-            baseSelectOptionProps: rootProps.slotProps?.baseSelectOption,
-          })}
-        </rootProps.slots.baseSelect>
-      </rootProps.slots.baseFormControl>
-      {clearButton}
-    </SingleSelectOperatorContainer>
+    <rootProps.slots.baseFormControl fullWidth sx={sx}>
+      <rootProps.slots.baseInputLabel
+        {...rootProps.slotProps?.baseInputLabel}
+        id={labelId}
+        htmlFor={id}
+        shrink
+        variant={variant}
+      >
+        {label}
+      </rootProps.slots.baseInputLabel>
+      <rootProps.slots.baseSelect
+        id={id}
+        label={label}
+        labelId={labelId}
+        value={filterValue}
+        onChange={onFilterChange}
+        variant={variant}
+        type={type || 'text'}
+        inputProps={{
+          tabIndex,
+          ref: focusElementRef,
+          placeholder: placeholder ?? apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
+        }}
+        native={isSelectNative}
+        notched={variant === 'outlined' ? true : undefined}
+        {
+          ...(others as any) /* FIXME: typing error */
+        }
+        {...rootProps.slotProps?.baseSelect}
+      >
+        {renderSingleSelectOptions({
+          column: resolvedColumn,
+          OptionComponent: rootProps.slots.baseSelectOption,
+          getOptionLabel,
+          getOptionValue,
+          isSelectNative,
+          baseSelectOptionProps: rootProps.slotProps?.baseSelectOption,
+        })}
+      </rootProps.slots.baseSelect>
+    </rootProps.slots.baseFormControl>
   );
 }
 
