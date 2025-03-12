@@ -36,6 +36,11 @@ export interface GridBaseSlots {
    */
   baseLinearProgress: React.JSXElementConstructor<GridSlotProps['baseLinearProgress']>;
   /**
+   * The custom Menu component used in the grid.
+   * @default Menu
+   */
+  baseMenu: React.JSXElementConstructor<GridSlotProps['baseMenu']>;
+  /**
    * The custom MenuList component used in the grid.
    * @default MenuList
    */

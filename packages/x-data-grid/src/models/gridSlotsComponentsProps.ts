@@ -45,6 +45,7 @@ import type {
   SwitchProps,
   TooltipProps,
   TextFieldProps,
+  MenuProps,
 } from './gridBaseSlots';
 
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
@@ -57,6 +58,7 @@ export interface BaseCheckboxPropsOverrides {}
 export interface BaseCircularProgressPropsOverrides {}
 export interface BaseDividerPropsOverrides {}
 export interface BaseLinearProgressPropsOverrides {}
+export interface BaseMenuPropsOverrides {}
 export interface BaseMenuListPropsOverrides {}
 export interface BaseMenuItemPropsOverrides {}
 export interface BaseTextFieldPropsOverrides {}
@@ -101,6 +103,7 @@ interface BaseSlotProps {
   baseCircularProgress: CircularProgressProps & BaseCircularProgressPropsOverrides;
   baseDivider: DividerProps & BaseDividerPropsOverrides;
   baseLinearProgress: LinearProgressProps & BaseLinearProgressPropsOverrides;
+  baseMenu: MenuProps & BaseMenuPropsOverrides;
   baseMenuList: MenuListProps & BaseMenuListPropsOverrides;
   baseMenuItem: MenuItemProps & BaseMenuItemPropsOverrides;
   baseTextField: TextFieldProps & BaseTextFieldPropsOverrides;

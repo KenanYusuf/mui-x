@@ -136,6 +136,21 @@ export type DividerProps = {
   orientation?: 'horizontal' | 'vertical';
 };
 
+export type MenuProps = {
+  open: boolean;
+  children: React.ReactNode;
+  onOpenChange: (open: boolean) => void;
+  items: {
+    label: string;
+    value: number | string | readonly string[];
+    selected?: boolean;
+    iconStart?: React.ReactNode;
+    iconEnd?: React.ReactNode;
+    disabled?: boolean;
+    onClick?: React.MouseEventHandler<HTMLElement>;
+  }[];
+};
+
 export type MenuListProps = {
   ref?: Ref<HTMLUListElement>;
   id?: string;

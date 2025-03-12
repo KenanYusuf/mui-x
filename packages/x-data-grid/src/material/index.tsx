@@ -12,7 +12,7 @@ import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import MUILinearProgress from '@mui/material/LinearProgress';
 import MUIListItemIcon from '@mui/material/ListItemIcon';
 import MUIListItemText from '@mui/material/ListItemText';
-import { MenuProps as MUIMenuProps } from '@mui/material/Menu';
+import MUIMenu, { MenuProps as MUIMenuProps } from '@mui/material/Menu';
 import MUIMenuList from '@mui/material/MenuList';
 import MUIMenuItem from '@mui/material/MenuItem';
 import MUITextField from '@mui/material/TextField';
@@ -31,6 +31,7 @@ import MUIPaper from '@mui/material/Paper';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUISkeleton from '@mui/material/Skeleton';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { unstable_useId as useId } from '@mui/utils';
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
   GridAddIcon,
@@ -153,6 +154,50 @@ const BaseSelect = forwardRef<any, GridSlotProps['baseSelect']>(function BaseSel
   );
 });
 
+const BaseMenu = forwardRef<any, GridSlotProps['baseMenu']>(function BaseMenu(props, ref) {
+  const { items, children, open, onOpenChange, ...rest } = props;
+  const triggerRef = React.useRef<HTMLElement>(null);
+  const triggerId = useId();
+  const menuId = useId();
+
+  return (
+    <React.Fragment>
+      {React.cloneElement(children as React.ReactElement<any>, {
+        id: triggerId,
+        'aria-controls': open ? menuId : undefined,
+        'aria-haspopup': true,
+        'aria-expanded': open ? true : undefined,
+        onClick: () => onOpenChange(true),
+        ref: triggerRef,
+      })}
+      <MUIMenu
+        id={menuId}
+        anchorEl={triggerRef.current}
+        open={open}
+        onClose={() => onOpenChange(false)}
+        MenuListProps={{
+          'aria-labelledby': triggerId,
+        }}
+        {...rest}
+        ref={ref}
+      >
+        {items.map((item) => (
+          <MUIMenuItem
+            key={String(item.value)}
+            value={item.value}
+            disabled={item.disabled}
+            onClick={item.onClick}
+          >
+            {item.iconStart && <MUIListItemIcon>{item.iconStart}</MUIListItemIcon>}
+            <MUIListItemText>{item.label}</MUIListItemText>
+            {item.iconEnd && <MUIListItemIcon>{item.iconEnd}</MUIListItemIcon>}
+          </MUIMenuItem>
+        ))}
+      </MUIMenu>
+    </React.Fragment>
+  );
+});
+
 /* eslint-disable material-ui/disallow-react-api-in-server-components */
 
 const iconSlots: GridIconSlotsComponent = {
@@ -202,6 +247,7 @@ const baseSlots: GridBaseSlots = {
   baseDivider: MUIDivider,
   baseInput: BaseInput,
   baseLinearProgress: MUILinearProgress,
+  baseMenu: BaseMenu,
   baseMenuList: BaseMenuList,
   baseMenuItem: BaseMenuItem,
   baseTextField: BaseTextField,
